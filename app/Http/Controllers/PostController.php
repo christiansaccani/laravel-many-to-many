@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Type;
 
 use App\Http\Requests\StorePostRequest;
+use App\Models\Technology;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -27,7 +28,9 @@ class PostController extends Controller
     {
         $types = Type::all();
 
-        return view('admin.posts.create', compact('types'));
+        $technologies = Technology::all();
+
+        return view('admin.posts.create', compact('types','technologies'));
     }
 
     /**
@@ -54,6 +57,8 @@ class PostController extends Controller
 
         $newPost->fill($request->all());
         $newPost->save();
+
+        $newPost->technologies()->attach($request->technologies);
 
         return redirect()->route('admin.posts.index');
     }
